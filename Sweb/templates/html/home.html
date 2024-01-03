@@ -3,24 +3,23 @@
 
 {% block content %}
 <div class="content">
+  <h4 id="current_date" style="text-align:center;font-weight: bold;color:gray"></h4>
+  <h4 style="text-align:center;font-weight: bold;color:gray">今日のワーファリンは５個です</h4>
   <br>
-  <h4 id="current_date" style="text-align: center;font-weight: bold;color:gray;margin-top:8px"></h4>
-  <h4 style="text-align: center;font-weight: bold;color:gray;margin-bottom:18px">今日のワーファリンは ５ 個です</h4><br>
-  <a href="{% url 'test_start' %}"class="btn_01"><h4>テストを開始する</h4></a><br>
-  <a href="{% url 'video' %}"class="btn_01"><h4>コントローラ交換の手順</h4></a><br>
-  <a href="{% static 'pdf/document.pdf' %}"class="btn_01"><h4>説明書 pdf</h4></a><br>
-  <a href="{% static 'pdf/document.pdf' %}"class="btn_01"><h4>お薬管理</h4></a><br>
-  <a href="{% url 'add' %}"class="btn_01"><h4>問題の新規作成</h4></a><br>
-
+  <a href="{% url 'test_start' %}"class="btn_01"><h3>テストを開始する</h3></a><br>
+  <a href="{% url 'video' %}"class="btn_01"><h3>コントローラ交換の手順</h3></a><br>
+  <a href="{% static 'pdf/document.pdf' %}"class="btn_01"><h3>説明書 pdf</h3></a><br>
+  <a href="{% url 'add' %}"class="btn_01"><h3>問題の新規作成</h3></a><br>
+  <a href="{% url 'add' %}"class="btn_01"><h3>お薬管理</h3></a><br>
 </div>
 
 <script>
-    date = new Date();
-    year = date.getFullYear();
-    month = date.getMonth() + 1;
-    day = date.getDate();
-    dayOfWeekStrJP = [ "日", "月", "火", "水", "木", "金", "土" ] ;
-    document.getElementById("current_date").innerHTML = month + "月" + day + "日（" + dayOfWeekStrJP[date.getDay()] + "）";
+  date = new Date();
+  year = date.getFullYear();
+  month = date.getMonth() + 1;
+  day = date.getDate();
+  dayOfweek = date.getDay();
+  dayOfWeekStrJP = [ "日", "月", "火", "水", "木", "金", "土" ] ;
+  document.getElementById("current_date").innerHTML = month + "月" + day + "日（" + dayOfWeekStrJP[date.getDay()] + "）";
 </script>
-
 {% endblock %}
