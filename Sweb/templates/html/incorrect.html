@@ -1,0 +1,23 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content">
+  <h3 style="text-align: center">あなたが間違えた問題</h3>
+  {% for obj in incorrect_list %}
+    {% for question in questions %}
+      {% if question.id == obj.question_id %}
+        <img>{{ question.image }}</img>
+        <p>分野：{{ question.title }}</p>
+        <p>問題：{{ question.question }}</p>
+        <p>正答：{{ question.correct }}</p>
+        <p>解説：{{ question.discription }}</p>
+        <hr>
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+
+  <a href="{% url 'home' %}"><p>homeに戻る</p></a>
+</div>
+
+{% endblock %}

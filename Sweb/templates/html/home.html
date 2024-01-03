@@ -1,0 +1,14 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content">
+  <br>
+  <a href="{% url 'test_start' %}"class="btn_01"><h3>テストを開始する</h3></a><br>
+  <a href="{% url 'video' %}"class="btn_01"><h3>コントローラ交換の手順</h3></a><br>
+  <a href="{% url 'add' %}"class="btn_01"><h3>問題の新規作成</h3></a><br>
+  <a href="{% static 'pdf/document.pdf' %}"class="btn_01"><h3>説明書 pdf</h3></a><br>
+
+</div>
+
+{% endblock %}

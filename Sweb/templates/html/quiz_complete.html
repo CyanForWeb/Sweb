@@ -1,0 +1,13 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content">
+  <h3 style="text-align: center">テスト終了</h3>
+  <p style="text-align: center">あなたのテストの正答率は，，，</p>
+  <h1 style="text-align: center">{{length_correct}}／{{length}}</h1>
+  <a href="{% url 'incorrect' %}"><p>間違えた問題を確認する</p></a>
+
+  <a href="{% url 'home' %}"><p>homeに戻る</p></a>
+</div>
+{% endblock %}

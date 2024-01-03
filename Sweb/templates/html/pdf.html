@@ -1,0 +1,12 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content">
+  <h3 style="text-align: center">説明書 pdf</h3>
+<embed src="{% static 'pdf/document.pdf' %}" type="application/pdf" width="100%" height="auto">
+  <br>
+  <a href="{% url 'home' %}"><p>＜ homeに戻る</p></a>
+</div>
+
+{% endblock %}

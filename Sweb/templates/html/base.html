@@ -1,0 +1,23 @@
+{% load static %}
+<!doctype html>
+<html>
+    <head>
+        <title>Sweb</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/design.css' %}">
+        
+    </head>
+    <body>
+      <div style="background-color:rgba(220, 220, 220, 0.9);">
+      <header class="header">
+        <a href="{% url 'home' %}"><h1 class="head">　S web</h1></a>
+      </header>
+      {% block content %}
+      {% endblock %}
+      </div>
+    </body>
+</html>

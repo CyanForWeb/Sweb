@@ -1,0 +1,16 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content">
+  <h3 style="text-align: center">コントローラ交換の手順</h3>
+
+  <video width="100%" height="auto" controls style="border:2px solid;">
+    <source src="{% static 'video/video.mp4' %}">
+  </video>
+
+  <br>
+  <a href="{% url 'home' %}"><p>＜ homeに戻る</p></a>
+</div>
+
+{% endblock %}

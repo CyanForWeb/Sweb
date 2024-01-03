@@ -1,0 +1,159 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content">
+  <div class="flex-container">
+    <p style="font-size:small;">{{ question_index }}/{{ length }}　{{ current_question.title }}</p>
+    <a href="{% url 'home' %}"><p style="font-size:small;">回答を途中終了する →]</p></a>
+  </div>
+  {% if current_question.image != "0" %}
+  <div style="text-align: center">
+    <img src='{% static "question/" %}{{current_question.image}}.jpg' width="280" height="auto"/><br><br>
+  </div>
+  {% endif %}
+  <br><p style="font-weight: bold">Q. {{ current_question.question }}</p>
+  </div>
+  <br>
+  <div style="text-align: center;background-color: #9AC2C9;padding: 2rem;font-size:small" class="fixed-bottom">
+    <div id="buttonContainer"></div><br>
+    <div id="disArea"></div><br>
+
+  {% if not show_finish_button %}
+      <button id="answerButton" style="display:none;" onclick="checkAnswer()">Answer</button>
+      <button id="descriptionButton" style="display:none;" onclick="viewDiscription()">解説を読む</button><br>
+      <button id="nextButton" style="display:none;" onclick="nextQuestion()">Next</button>
+  {% else %}
+      <button id="answerButton" style="display:none;" onclick="checkAnswer()">Answer</button>
+      <button id="descriptionButton" style="display:none;" onclick="viewDiscription()">解説を読む</button><br>
+      <form method="post" action="{% url 'quiz_complete' %}">
+          {% csrf_token %}
+          <button id="finishButton" style="display:none;">Finish</button>
+          <!--<input type="submit" value="Finish">-->
+      </form>
+  {% endif %}
+
+  </div>
+
+<!-- ボタンをクリックして色を変える関数 -->
+<script>
+  // 選択されたボタンを保持する変数
+  var selectedButton = null;
+  function changeButtonColor(button) {
+    setButtonClass_1(document.getElementById('answerButton'));
+    // 以前に選択されたボタンがあれば、その色を元に戻す
+    if (selectedButton) {
+      selectedButton.style.backgroundColor = '#fff';
+      selectedButton.style.color = '#003333';
+    }
+    // 選択されたボタンの色を変える
+    button.style.backgroundColor = '#003333';
+    button.style.color = '#fff';
+    // 選択されたボタンを更新
+    selectedButton = button;
+  }
+</script>
+
+<script>
+  //回答のシャッフル
+  function shuffleArray(array){
+    for(let i=array.length-1; i>0; i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+  // ボタンを生成する関数
+  function createButton(id, text) {
+    var button = document.createElement("button");
+    button.id = id;
+    button.innerText = text;
+    button.classList.add('btn_04');
+    button.onclick = function() { changeButtonColor(button); };
+    return button;
+  }
+  const selectArray = [
+    '{{ current_question.correct }}','{{ current_question.incorrect_1 }}',
+    '{{ current_question.incorrect_2 }}','{{ current_question.incorrect_3 }}'
+  ];
+  for(let i=selectArray.length-1; i>=0; i--){
+    if(selectArray[i]=='null'){
+      selectArray.splice(i,1);
+    }
+  }
+  //配列をシャッフル
+  shuffleArray(selectArray);
+  // コンテナ要素を取得
+  var container = document.getElementById("buttonContainer");
+  // 選択ボタンの生成とコンテナへの追加
+  for(let i=0; i<selectArray.length; i++){
+    var button = createButton("select", selectArray[i]);
+    container.appendChild(button);
+    if(i+1<selectArray.length){
+      // ボタンごとに改行するための要素（br）を追加
+      var lineBreak = document.createElement("br");
+      container.appendChild(lineBreak);
+    }
+  }
+  //回答ボタンが押されたら，，，
+  function checkAnswer() {
+    if (!selectedButton) {
+      alert('ボタンを選択してください。');
+      return;
+    }
+    var selectedText = selectedButton.innerText.trim();
+    var correctAnswer = '{{ current_question.correct }}';
+    if (selectedText === correctAnswer) {
+      alert('⭕️ 正解');
+    } else {
+      alert('❌ 不正解');
+      // 正解の場合、サーバーサイドに新しいデータを作成
+      var questionId = {{ current_question.id }};
+      createTestInstance(questionId);
+    }
+    // "回答" ボタンを非表示
+    setButtonClass_2(document.getElementById('answerButton'));
+    // "解説" ボタンを表示
+    setButtonClass_1(document.getElementById('descriptionButton'));
+    if("{{show_finish_button}}"=="False"){
+      // "Next" ボタンを表示
+      setButtonClass_1(document.getElementById('nextButton'));
+    }else{
+      //"Finish"ボタンを表示
+      setButtonClass_1(document.getElementById('finishButton'));
+    }
+  }
+
+  //buttonを設定 表示ver
+  function setButtonClass_1(button){
+    button.classList.add('btn_06');
+    button.style.display = 'block';
+  }
+  //buttonを設定 非表示ver
+  function setButtonClass_2(button) {
+    button.classList.add('0');
+    button.style.visibility = 'hidden';
+    button.style.position = 'absolute';  // 解答ボタン非表示時に解説ボタンの位置を調整
+  }
+  //解説を表示する
+  function viewDiscription(){
+    //解説を表示
+    var disArea = document.getElementById("disArea");
+    var discription = document.createElement("p");
+    discription.innerText = '正解は「{{current_question.correct}}」';
+    disArea.appendChild(discription);
+    // "解説" ボタンを非表示
+    setButtonClass_2(document.getElementById('descriptionButton'));
+  }
+  //次の質問へ進む
+  function nextQuestion() {
+    window.location.href = "{% url 'next_question' question_index %}";
+  }
+  //不正解のidを保存
+  function createTestInstance(questionId) {
+    // 新しいデータを作成するためのAjaxリクエスト
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', '/create_test_instance/' + questionId + '/');
+    xhr.send();
+  }
+</script>
+{% endblock %}

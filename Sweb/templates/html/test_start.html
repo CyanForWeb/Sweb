@@ -1,0 +1,23 @@
+{% extends './base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="content">
+  <h3 style="text-align: center">テスト</h3>
+
+  <div style="background-color:white;padding: 1rem">
+  <p>説明</p>
+  <p>これから合計{{length}}問の問題が出題されます．<br>所要時間はおよそ30分程度です．<br>
+  開始ボタンから回答をスタートしてください．</p>
+  </div>
+<br>
+    <form method="post">
+    {% csrf_token %}
+      <button name="start" class="btn_06">開始</button>
+    </form>
+
+    <br>
+    <a href="{% url 'home' %}"><p>＜ homeに戻る</p></a>
+</div>
+
+{% endblock %}
